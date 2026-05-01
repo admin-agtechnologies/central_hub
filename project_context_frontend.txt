@@ -1,17 +1,21 @@
+﻿Next.js Project Context
+Generated On: 2026-05-01 12:29:59
+Root: C:\Users\Steve\Documents\AGT_9services\dev_agt_assist\hub
+===============================================
+
+// FILE: app/components/HubPageContent.tsx
+-----------------------------------------------
 // ============================================================
-// FICHIER  : dev_agt_assist/hub/app/components/HubPageContent.tsx
-// VERSION  : 3.2.0
-// Correction : SECTOR_ROUTES pointe vers les vraies URLs (ports séparés)
-// Ports :
-//   PME        → http://localhost:3001
-//   Bancaire   → http://localhost:3002
-//   Clinique   → http://localhost:3003
-//   École      → http://localhost:3004
-//   E-commerce → http://localhost:3005
-//   Hôtel      → http://localhost:3006
-//   Secteur Public → http://localhost:3007  (port attribué)
-//   Restaurant → http://localhost:3008
-//   Voyage     → http://localhost:3009
+// FICHIER  : app/components/HubPageContent.tsx
+// VERSION  : 3.1.0
+// Fix + Vidéo réelle : https://api.salma.agtgroupholding.com/media/seed/bourses/demo.mp4
+// Changements :
+//   - Vidéo embarquée depuis le serveur AGT
+//   - globals.css fix : @import en premier
+//   - Hero redesigné : fond sombre, grain, orbes, police Syne
+//   - Footer original restauré intégralement
+//   - Section Tarifs supprimée
+//   - Secteurs avec images illustratives Unsplash
 // ============================================================
 
 "use client";
@@ -33,7 +37,7 @@ function cn(...classes: (string | boolean | undefined | null)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-// ── Routes internes du Hub ────────────────────────────────────────────────────
+// ── Routes ────────────────────────────────────────────────────────────────────
 const ROUTES = {
   onboarding: "/onboarding",
   login:      "/login",
@@ -41,19 +45,16 @@ const ROUTES = {
   tutorial:   "/tutorial",
 };
 
-// ── Routes vers les applis secteurs (ports séparés) ───────────────────────────
-// Chaque secteur est une appli Next.js indépendante sur son propre port.
-// En production, remplacer par les vraies URLs de déploiement.
 const SECTOR_ROUTES: Record<string, string> = {
-  pme:        "http://localhost:3001",
-  bancaire:   "http://localhost:3002",
-  clinique:   "http://localhost:3003",
-  ecole:      "http://localhost:3004",
-  ecommerce:  "http://localhost:3005",
-  hotel:      "http://localhost:3006",
-  public:     "http://localhost:3007",
-  restaurant: "http://localhost:3008",
-  voyage:     "http://localhost:3009",
+  pme:        "/pme",
+  bancaire:   "/bancaire",
+  clinique:   "/clinique",
+  ecole:      "/ecole",
+  ecommerce:  "/ecommerce",
+  hotel:      "/hotel",
+  public:     "/public",
+  restaurant: "/restaurant",
+  voyage:     "/voyage",
 };
 
 // ── Type Secteur ─────────────────────────────────────────────────────────────
@@ -125,7 +126,7 @@ function HeroCarousel({ locale }: { locale: string }) {
         </div>
       ))}
 
-      {/* Grain texture */}
+      {/* Grain texture cinématique */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.16]"
         style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E\")", backgroundSize: "180px 180px" }} />
 
@@ -133,7 +134,7 @@ function HeroCarousel({ locale }: { locale: string }) {
       <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
         style={{ backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,1) 1px,transparent 1px)", backgroundSize: "60px 60px" }} />
 
-      {/* Orbes */}
+      {/* Orbe lumière dynamique */}
       <div className="absolute top-[-100px] right-[12%] w-[450px] h-[450px] rounded-full blur-3xl pointer-events-none transition-all duration-1000"
         style={{ background: `radial-gradient(circle, ${s.accent}28 0%, transparent 65%)` }} />
       <div className="absolute bottom-[-80px] left-[8%] w-[320px] h-[320px] rounded-full blur-3xl pointer-events-none opacity-35"
@@ -144,7 +145,7 @@ function HeroCarousel({ locale }: { locale: string }) {
         style={{ minHeight: "100svh", paddingTop: "64px", paddingBottom: "80px" }}>
 
         {/* Badge */}
-        <div key={`b-${current}`} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-white text-xs font-semibold mb-7 animate-fade-in"
+        <div key={`b-${current}`} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-white text-sm font-semibold mb-7 animate-fade-in"
           style={{ background: "rgba(255,255,255,0.11)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.20)", boxShadow: `0 0 24px ${s.accent}28` }}>
           {s.badgeIcon === "zap"     && <Zap          className="w-4 h-4" style={{ color: s.accent }} />}
           {s.badgeIcon === "message" && <MessageSquare className="w-4 h-4" style={{ color: s.accent }} />}
@@ -154,7 +155,7 @@ function HeroCarousel({ locale }: { locale: string }) {
 
         {/* Titre */}
         <h1 key={`h-${current}`} className="animate-slide-up"
-          style={{ fontSize: "clamp(1.6rem,4vw,3rem)", fontWeight: 900, lineHeight: 1.06, color: "#fff", textShadow: "0 4px 32px rgba(0,0,0,0.4)", letterSpacing: "-0.03em", maxWidth: "880px", fontFamily: "'Syne',system-ui,sans-serif" }}>
+          style={{ fontSize: "clamp(2.8rem,7.5vw,5.8rem)", fontWeight: 900, lineHeight: 1.06, color: "#fff", textShadow: "0 4px 32px rgba(0,0,0,0.4)", letterSpacing: "-0.03em", maxWidth: "880px", fontFamily: "'Syne',system-ui,sans-serif" }}>
           {locale === "fr" ? s.line1Fr : s.line1En}
           <br />
           <span style={{ color: s.accent, filter: `drop-shadow(0 0 22px ${s.accent}55)` }}>
@@ -163,7 +164,7 @@ function HeroCarousel({ locale }: { locale: string }) {
         </h1>
 
         {/* Description */}
-        <p key={`p-${current}`} className="mt-5 mb-10 text-sm leading-relaxed animate-fade-in delay-200"
+        <p key={`p-${current}`} className="mt-5 mb-10 text-lg leading-relaxed animate-fade-in delay-200"
           style={{ color: "rgba(255,255,255,0.72)", maxWidth: "560px" }}>
           {locale === "fr"
             ? "AGT Platform donne à chaque entreprise un assistant intelligent disponible 24h/24."
@@ -194,7 +195,7 @@ function HeroCarousel({ locale }: { locale: string }) {
         </div>
       </div>
 
-      {/* Flèches */}
+      {/* Flèches navigation */}
       <button onClick={prev} className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full flex items-center justify-center text-white transition-all hover:scale-110"
         style={{ background: "rgba(0,0,0,0.28)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.16)" }}>
         <ChevronLeft className="w-5 h-5" />
@@ -204,7 +205,7 @@ function HeroCarousel({ locale }: { locale: string }) {
         <ChevronRight className="w-5 h-5" />
       </button>
 
-      {/* Dots */}
+      {/* Indicateurs dots */}
       <div className="absolute bottom-28 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5">
         {HERO_SLIDES.map((_, i) => (
           <button key={i} onClick={() => goTo(i)} className="rounded-full transition-all duration-300"
@@ -221,20 +222,15 @@ function HeroCarousel({ locale }: { locale: string }) {
 }
 
 // ── Carte Secteur ─────────────────────────────────────────────────────────────
-// CORRECTION : utilise <a> au lieu de <Link> car les URLs sont externes (autres ports)
 function SectorCard({ sector, locale }: { sector: Sector; locale: string }) {
   const [hovered, setHovered] = useState(false);
   const Icon = sector.icon;
   return (
-    <a
-      href={SECTOR_ROUTES[sector.id]}
-      target="_blank"
-      rel="noopener noreferrer"
+    <Link href={SECTOR_ROUTES[sector.id]}
       className="group relative block rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2"
-      style={{ boxShadow: hovered ? `0 28px 64px ${sector.primary}42, 0 8px 24px rgba(0,0,0,0.22)` : "0 4px 20px rgba(0,0,0,0.16)", border: "1px solid rgba(255,255,255,0.10)", cursor: "pointer" }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+      style={{ boxShadow: hovered ? `0 28px 64px ${sector.primary}42, 0 8px 24px rgba(0,0,0,0.22)` : "0 4px 20px rgba(0,0,0,0.16)", border: "1px solid rgba(255,255,255,0.10)" }}
+      onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+
       {/* Image */}
       <div className="relative h-44 overflow-hidden">
         <img src={sector.image} alt={locale === "fr" ? sector.nameFr : sector.nameEn}
@@ -269,13 +265,11 @@ function SectorCard({ sector, locale }: { sector: Sector; locale: string }) {
           ))}
         </div>
         <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-          <span className="text-xs font-bold" style={{ color: sector.primary }}>
-            {locale === "fr" ? "Découvrir la solution" : "Discover the solution"}
-          </span>
+          <span className="text-xs font-bold" style={{ color: sector.primary }}>{locale === "fr" ? "Découvrir la solution" : "Discover the solution"}</span>
           <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" style={{ color: sector.primary }} />
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
 
@@ -341,8 +335,13 @@ export default function HubPageContent() {
 
   const handlePlayVideo = () => {
     if (!videoRef.current) return;
-    if (videoPlaying) { videoRef.current.pause(); setVideoPlaying(false); }
-    else { videoRef.current.play(); setVideoPlaying(true); }
+    if (videoPlaying) {
+      videoRef.current.pause();
+      setVideoPlaying(false);
+    } else {
+      videoRef.current.play();
+      setVideoPlaying(true);
+    }
   };
 
   return (
@@ -428,12 +427,9 @@ export default function HubPageContent() {
               ))}
             </div>
           </div>
-
-          {/* Grille des secteurs — chaque carte ouvre l'appli sur son port */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {SECTORS.map(sector => <SectorCard key={sector.id} sector={sector} locale={locale} />)}
           </div>
-
           <div className="text-center mt-16">
             <p className="text-white/50 text-sm mb-6">{locale === "fr" ? "Votre secteur n'est pas listé ? Contactez-nous pour une solution personnalisée." : "Your industry isn't listed? Contact us for a custom solution."}</p>
             <Link href={ROUTES.onboarding} className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#25D366] text-white font-black text-base hover:bg-[#128C7E] transition-all hover:scale-105 shadow-lg shadow-[#25D366]/20">
@@ -458,8 +454,11 @@ export default function HubPageContent() {
           </p>
         </div>
 
+        {/* ── Player vidéo stylé ── */}
         <div className="relative rounded-2xl overflow-hidden max-w-3xl mx-auto"
           style={{ background: "#010f0c", boxShadow: "0 40px 100px rgba(7,94,84,0.32), 0 8px 32px rgba(0,0,0,0.28)" }}>
+
+          {/* Barre titre façon macOS */}
           <div className="flex items-center gap-2 px-5 py-3.5 border-b" style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.07)" }}>
             <div className="flex gap-1.5">
               <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
@@ -473,32 +472,96 @@ export default function HubPageContent() {
               </div>
             </div>
           </div>
+
+          {/* Zone vidéo */}
           <div className="aspect-video relative bg-[#010f0c]">
-            <video ref={videoRef} className="w-full h-full object-cover" onEnded={() => setVideoPlaying(false)} preload="metadata" playsInline>
+
+            {/* ── Vraie vidéo depuis le serveur AGT ── */}
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover"
+              onEnded={() => setVideoPlaying(false)}
+              preload="metadata"
+              playsInline
+            >
               <source src={DEMO_VIDEO_URL} type="video/mp4" />
             </video>
+
+            {/* Overlay play/pause — affiché quand pas en lecture */}
             {!videoPlaying && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ background: "rgba(1,15,12,0.65)", backdropFilter: "blur(2px)" }}>
+              <div className="absolute inset-0 flex flex-col items-center justify-center"
+                style={{ background: "rgba(1,15,12,0.65)", backdropFilter: "blur(2px)" }}>
+
+                {/* Mockup chat WhatsApp en fond déco */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.07] pointer-events-none px-12">
+                  <div className="w-72 space-y-3">
+                    {[
+                      { msg: "Bonjour, j'ai besoin d'un RDV médical",      me: false },
+                      { msg: "Bien sûr ! Pour quelle spécialité ?",         me: true  },
+                      { msg: "Cardiologue, demain matin si possible",        me: false },
+                      { msg: "✅ RDV confirmé — Dr. Martin, Mardi 9h30",    me: true  },
+                      { msg: "Merci ! Je reçois une confirmation ?",         me: false },
+                      { msg: "Oui, envoyée sur WhatsApp 📱",                me: true  },
+                    ].map((item, i) => (
+                      <div key={i} className={`flex ${item.me ? "justify-end" : "justify-start"}`}>
+                        <div className={`px-3 py-2 rounded-2xl text-[11px] text-white max-w-[75%] leading-relaxed ${item.me ? "bg-[#25D366]/60 rounded-br-sm" : "bg-white/15 rounded-bl-sm"}`}>
+                          {item.msg}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bouton play central */}
                 <div className="relative flex flex-col items-center z-10">
-                  <div className="absolute rounded-full border border-[#25D366]/15 animate-ping" style={{ width: 130, height: 130, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
-                  <div className="absolute rounded-full border border-[#25D366]/22" style={{ width: 108, height: 108, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
-                  <button onClick={handlePlayVideo} className="relative w-20 h-20 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+                  {/* Anneaux animés */}
+                  <div className="absolute rounded-full border border-[#25D366]/15 animate-ping"
+                    style={{ width: 130, height: 130, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
+                  <div className="absolute rounded-full border border-[#25D366]/22"
+                    style={{ width: 108, height: 108, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
+                  <button
+                    onClick={handlePlayVideo}
+                    className="relative w-20 h-20 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
                     style={{ background: "linear-gradient(135deg, #25D366, #075E54)", boxShadow: "0 0 40px rgba(37,211,102,0.42), 0 8px 24px rgba(0,0,0,0.3)" }}>
                     <Play className="w-8 h-8 text-white ml-1" />
                   </button>
-                  <p className="mt-8 text-white/45 text-sm font-medium">{locale === "fr" ? "Regarder la démo" : "Watch the demo"}</p>
+                  <p className="mt-8 text-white/45 text-sm font-medium">
+                    {locale === "fr" ? "Regarder la démo" : "Watch the demo"}
+                  </p>
+                  <div className="flex items-center gap-3 mt-3">
+                    {[
+                      { e: "🕐", t: "30 sec" },
+                      { e: "⚡", t: locale === "fr" ? "Sans code" : "No code" },
+                      { e: "📱", t: "WhatsApp" },
+                    ].map((c, i) => (
+                      <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs text-white/45"
+                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                        {c.e} {c.t}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
+
+            {/* Bouton pause (quand vidéo en cours) */}
             {videoPlaying && (
-              <button onClick={handlePlayVideo} className="absolute bottom-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 opacity-70 hover:opacity-100"
+              <button
+                onClick={handlePlayVideo}
+                className="absolute bottom-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 opacity-70 hover:opacity-100"
                 style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)" }}>
                 <Pause className="w-4 h-4 text-white" />
               </button>
             )}
           </div>
+
+          {/* Métriques bas */}
           <div className="grid grid-cols-3 divide-x border-t" style={{ borderColor: "rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.03)" }}>
-            {[{ v: "30 sec", fr: "Durée", en: "Duration" },{ v: "< 5 min", fr: "Mise en service", en: "Setup time" },{ v: "0 code", fr: "Requis", en: "Required" }].map((m, i) => (
+            {[
+              { v: "30 sec",  fr: "Durée",           en: "Duration"   },
+              { v: "< 5 min", fr: "Mise en service", en: "Setup time" },
+              { v: "0 code",  fr: "Requis",          en: "Required"   },
+            ].map((m, i) => (
               <div key={i} className="flex flex-col items-center py-4 text-center" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
                 <span className="font-black text-[#25D366] text-base">{m.v}</span>
                 <span className="text-[10px] text-white/28 uppercase tracking-widest mt-0.5">{locale === "fr" ? m.fr : m.en}</span>
@@ -568,11 +631,13 @@ export default function HubPageContent() {
         </div>
       </section>
 
-      {/* ══ FOOTER ══════════════════════════════════════════════════════════ */}
+      {/* ══ FOOTER — VERSION ORIGINALE COMPLÈTE ═════════════════════════════ */}
       <footer className="bg-[#022c22] text-white">
         <div className="h-1 bg-gradient-to-r from-[#25D366] via-[#075E54] to-[#6C3CE1]" />
         <div className="max-w-6xl mx-auto px-4 pt-16 pb-10">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
+
+            {/* Brand */}
             <div className="md:col-span-4 space-y-5">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-[#25D366] flex items-center justify-center text-white font-black text-base shadow-lg">A</div>
@@ -591,14 +656,23 @@ export default function HubPageContent() {
                 </div>
                 <div className="flex items-center gap-2.5 text-sm text-white/50">
                   <Mail className="w-4 h-4 flex-shrink-0 text-[#25D366]" />
-                  <a href="mailto:secretariatagtechnologies@gmail.com" className="hover:text-[#25D366] transition-colors">secretariatagtechnologies@gmail.com</a>
+                  <a href="mailto:secretariatagtechnologies@gmail.com" className="hover:text-[#25D366] transition-colors">
+                    secretariatagtechnologies@gmail.com
+                  </a>
                 </div>
               </div>
             </div>
+
+            {/* Produit */}
             <div className="md:col-span-2 space-y-4">
               <p className="text-xs font-black uppercase tracking-widest text-white/40 mb-5">{locale === "fr" ? "Produit" : "Product"}</p>
               <ul className="space-y-3">
-                {[{ fr:"Fonctionnalités", en:"Features", href:"#features" },{ fr:"Demo", en:"Demo", href:"#demo" },{ fr:"S'inscrire", en:"Sign up", href:ROUTES.onboarding }].map(item => (
+                {[
+                  { fr:"Fonctionnalités", en:"Features",  href:"#features" },
+                  { fr:"Tarifs",         en:"Pricing",    href:"#plans" },
+                  { fr:"Demo",           en:"Demo",       href:"#demo" },
+                  { fr:"S'inscrire",     en:"Sign up",    href:ROUTES.onboarding },
+                ].map(item => (
                   <li key={item.href}>
                     <a href={item.href} className="text-sm text-white/60 hover:text-[#25D366] transition-colors flex items-center gap-1.5 group">
                       <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -608,23 +682,31 @@ export default function HubPageContent() {
                 ))}
               </ul>
             </div>
+
+            {/* Solutions */}
             <div className="md:col-span-3 space-y-4">
               <p className="text-xs font-black uppercase tracking-widest text-white/40 mb-5">Solutions</p>
               <ul className="space-y-2">
                 {SECTORS.slice(0, 5).map(s => (
                   <li key={s.id}>
-                    <a href={SECTOR_ROUTES[s.id]} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-white/60 hover:text-[#25D366] transition-colors group">
+                    <Link href={SECTOR_ROUTES[s.id]} className="flex items-center gap-2 text-sm text-white/60 hover:text-[#25D366] transition-colors group">
                       <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: s.accent }} />
                       {locale === "fr" ? s.nameFr : s.nameEn}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
+
+            {/* Ressources */}
             <div className="md:col-span-3 space-y-4">
               <p className="text-xs font-black uppercase tracking-widest text-white/40 mb-5">{locale === "fr" ? "Ressources" : "Resources"}</p>
               <ul className="space-y-3">
-                {[{ fr:"Aide", en:"Help", href:ROUTES.help, Icon:HelpCircle },{ fr:"Tutoriels", en:"Tutorials", href:ROUTES.tutorial, Icon:BookOpen },{ fr:"Se connecter", en:"Log in", href:ROUTES.login, Icon:Bot }].map(item => (
+                {[
+                  { fr:"Aide",         en:"Help",       href:ROUTES.help,     Icon:HelpCircle },
+                  { fr:"Tutoriels",    en:"Tutorials",  href:ROUTES.tutorial, Icon:BookOpen },
+                  { fr:"Se connecter",en:"Log in",      href:ROUTES.login,    Icon:Bot },
+                ].map(item => (
                   <li key={item.href}>
                     <Link href={item.href} className="flex items-center gap-2.5 text-sm text-white/60 hover:text-[#25D366] transition-colors group">
                       <item.Icon className="w-3.5 h-3.5 text-white/30 group-hover:text-[#25D366] transition-colors" />
@@ -638,13 +720,21 @@ export default function HubPageContent() {
                 <span>{locale === "fr" ? "Conçu au Cameroun" : "Made in Cameroon"}</span>
               </div>
             </div>
+
           </div>
+
           <div className="h-px bg-white/10 mb-6" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-white/30">© {new Date().getFullYear()} AG Technologies. {locale === "fr" ? "Tous droits réservés." : "All rights reserved."}</p>
+            <p className="text-xs text-white/30">
+              © {new Date().getFullYear()} AG Technologies. {locale === "fr" ? "Tous droits réservés." : "All rights reserved."}
+            </p>
             <div className="flex items-center gap-3">
-              <button onClick={() => setLocale(l => l === "fr" ? "en" : "fr")} className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-white/50 hover:text-white transition-all font-bold">{locale === "fr" ? "🇬🇧 EN" : "🇫🇷 FR"}</button>
-              <button onClick={() => setTheme(t => t === "dark" ? "light" : "dark")} className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white/50 hover:text-white transition-all">
+              <button onClick={() => setLocale(l => l === "fr" ? "en" : "fr")}
+                className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-white/50 hover:text-white transition-all font-bold">
+                {locale === "fr" ? "🇬🇧 EN" : "🇫🇷 FR"}
+              </button>
+              <button onClick={() => setTheme(t => t === "dark" ? "light" : "dark")}
+                className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white/50 hover:text-white transition-all">
                 {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
             </div>
@@ -655,3 +745,574 @@ export default function HubPageContent() {
     </div>
   );
 }
+
+// END OF FILE: app/components/HubPageContent.tsx
+
+
+// FILE: app/globals.css
+-----------------------------------------------
+/* ============================================================
+   FICHIER  : app/globals.css
+   VERSION  : 2.1.0
+   Fix : les deux @import en PREMIER, avant toute règle CSS
+   ============================================================ */
+
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Syne:wght@700;800&display=swap');
+
+/* ── Variables thème LIGHT ───────────────────────────────────────────────── */
+:root {
+  --bg:            #F8FAFB;
+  --bg-card:       #FFFFFF;
+  --text:          #0F172A;
+  --text-muted:    #64748B;
+  --border:        #E2E8F0;
+  --shadow:        0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg:     0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+  --radius:        16px;
+  --green-primary: #075E54;
+  --green-accent:  #25D366;
+  --green-light:   #DCFCE7;
+}
+
+/* ── Variables thème DARK ────────────────────────────────────────────────── */
+.dark {
+  --bg:         #0A0F0D;
+  --bg-card:    #111916;
+  --text:       #F1F5F9;
+  --text-muted: #94A3B8;
+  --border:     #1E2D27;
+  --shadow:     0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3 {
+  font-family: 'Syne', 'Plus Jakarta Sans', system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* ── Composants ──────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+.card:hover { box-shadow: var(--shadow-lg); }
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: var(--green-primary);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 0.875rem;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba(7,94,84,0.3);
+}
+.btn-primary:hover {
+  background: #128C7E;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(7,94,84,0.4);
+}
+.btn-primary:active { transform: translateY(0); }
+
+/* ── Animations ──────────────────────────────────────────────────────────── */
+
+@keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes float   { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes pulseSlow { 0%,100% { opacity:.6; transform:scale(1); } 50% { opacity:1; transform:scale(1.04); } }
+@keyframes pingOnce  { 0% { transform:scale(1); opacity:.6; } 100% { transform:scale(1.8); opacity:0; } }
+
+.animate-fade-in    { animation: fadeIn   0.6s ease both; }
+.animate-slide-up   { animation: slideUp  0.7s cubic-bezier(0.22,1,0.36,1) both; }
+.animate-float      { animation: float    4s ease-in-out infinite; }
+.animate-pulse-slow { animation: pulseSlow 3s ease-in-out infinite; }
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #075E54; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #25D366; }
+
+/* ── Sélection ───────────────────────────────────────────────────────────── */
+::selection { background: rgba(37,211,102,0.25); color: var(--text); }
+
+/* ── Focus accessible ────────────────────────────────────────────────────── */
+:focus-visible { outline: 2px solid #25D366; outline-offset: 3px; border-radius: 6px; }
+
+// END OF FILE: app/globals.css
+
+
+// FILE: app/layout.tsx
+-----------------------------------------------
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Create Next App",
+  description: "Generated by create next app",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col">{children}</body>
+    </html>
+  );
+}
+
+
+// END OF FILE: app/layout.tsx
+
+
+// FILE: app/page.tsx
+-----------------------------------------------
+// src/app/page.tsx — AGT Hub Central
+import type { Metadata } from "next";
+import HubPageContent from "./components/HubPageContent";
+
+const BASE_URL = "https://assist.ag-technologies.tech";
+
+export const metadata: Metadata = {
+  title: "AGT Platform — Hub des Solutions Sectorielles",
+  description:
+    "AGT Platform propose des assistants virtuels IA pour 9 secteurs d'activité : PME, Clinique, Hôtel, Restaurant, Banque, École, E-commerce, Voyage et Secteur Public.",
+};
+
+export default function HubPage() {
+  return <HubPageContent />;
+}
+
+// END OF FILE: app/page.tsx
+
+
+// FILE: .gitignore
+-----------------------------------------------
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+
+// END OF FILE: .gitignore
+
+
+// FILE: AGENTS.md
+-----------------------------------------------
+<!-- BEGIN:nextjs-agent-rules -->
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+<!-- END:nextjs-agent-rules -->
+
+
+// END OF FILE: AGENTS.md
+
+
+// FILE: CLAUDE.md
+-----------------------------------------------
+@AGENTS.md
+
+
+// END OF FILE: CLAUDE.md
+
+
+// FILE: eslint.config.mjs
+-----------------------------------------------
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
+
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  // Override default ignores of eslint-config-next.
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
+]);
+
+export default eslintConfig;
+
+
+// END OF FILE: eslint.config.mjs
+
+
+// FILE: extract_context.ps1
+-----------------------------------------------
+<#
+.SYNOPSIS
+Extrait le code source d'un projet Next.js pour l'utiliser comme contexte IA.
+#>
+
+param (
+    [string]$ProjectPath = "."
+)
+
+$OutputFilename = "project_context_frontend.txt"
+
+# Résolution du chemin absolu
+try {
+    $ResolvedPath = (Resolve-Path $ProjectPath -ErrorAction Stop).Path
+} catch {
+    Write-Error "Erreur: Répertoire invalide ($ProjectPath)."
+    exit 1
+}
+
+$OutputFile = Join-Path $ResolvedPath $OutputFilename
+
+# Suppression de l'ancien fichier s'il existe
+if (Test-Path $OutputFile) {
+    Remove-Item $OutputFile -Force
+}
+
+# Dossiers à ignorer (optimisation : on n'y entre même pas)
+$ExcludeDirs = @(
+    ".git", ".vscode", ".idea", "node_modules", ".next", 
+    "out", "build", "coverage", "public", "dist", ".vercel"
+)
+
+# Fichiers à ignorer (accepte les wildcards *)
+$ExcludeFiles = @(
+    "*.log", "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb",
+    ".env*", "*.ico", "*.png", "*.jpg", "*.jpeg", "*.svg", "*.webp", 
+    "*.pdf", "*.map", "*.ttf", "*.woff", "*.woff2", "*.eot", "*.mp4",
+    $OutputFilename
+)
+
+# Fonction pour vérifier si un fichier est binaire (contient des octets nuls)
+function Test-IsBinary {
+    param ([string]$FilePath)
+    try {
+        $bytes = [System.IO.File]::ReadAllBytes($FilePath)
+        $checkLength = [math]::Min(1024, $bytes.Length)
+        for ($i = 0; $i -lt $checkLength; $i++) {
+            if ($bytes[$i] -eq 0) { return $true }
+        }
+        return $false
+    } catch {
+        return $true # En cas d'erreur de lecture, on ignore par sécurité
+    }
+}
+
+$foundFiles = [System.Collections.Generic.List[string]]::new()
+
+# Fonction récursive pour lister les fichiers valides
+function Get-ValidFiles {
+    param ([string]$CurrentDir)
+    
+    $items = Get-ChildItem -Path $CurrentDir -Force -ErrorAction SilentlyContinue
+    
+    foreach ($item in $items) {
+        if ($item.PSIsContainer) {
+            # Si c'est un dossier et qu'il n'est pas dans la liste d'exclusion
+            if ($ExcludeDirs -notcontains $item.Name) {
+                Get-ValidFiles -CurrentDir $item.FullName
+            }
+        } else {
+            # Si c'est un fichier, on vérifie son extension/nom
+            $skip = $false
+            foreach ($pattern in $ExcludeFiles) {
+                if ($item.Name -like $pattern) {
+                    $skip = $true
+                    break
+                }
+            }
+            if (-not $skip) {
+                $foundFiles.Add($item.FullName)
+            }
+        }
+    }
+}
+
+Write-Host "Recherche des fichiers en cours..." -ForegroundColor Cyan
+Get-ValidFiles -CurrentDir $ResolvedPath
+
+# Écriture de l'en-tête
+$dateStr = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+$header = @"
+Next.js Project Context
+Generated On: $dateStr
+Root: $ResolvedPath
+===============================================
+"@
+
+Set-Content -Path $OutputFile -Value $header -Encoding UTF8
+
+Write-Host "Génération du fichier de contexte en cours..." -ForegroundColor Cyan
+
+foreach ($file in $foundFiles) {
+    # Calcul du chemin relatif
+    $relativePath = $file.Substring($ResolvedPath.Length).TrimStart('\')
+    $relativePath = $relativePath -replace '\\', '/' # Formatage type UNIX pour l'IA
+    
+    $fileHeader = "`n// FILE: $relativePath`n-----------------------------------------------"
+    Add-Content -Path $OutputFile -Value $fileHeader -Encoding UTF8
+    
+    if (Test-IsBinary -FilePath $file) {
+        Add-Content -Path $OutputFile -Value "[Fichier binaire ou asset omis]" -Encoding UTF8
+    } else {
+        try {
+            # Lecture du contenu brut
+            $content = Get-Content -Path $file -Raw -Encoding UTF8 -ErrorAction Stop
+            if ($null -ne $content) {
+                Add-Content -Path $OutputFile -Value $content -Encoding UTF8
+            }
+        } catch {
+            Add-Content -Path $OutputFile -Value "[Erreur lors de la lecture du fichier]" -Encoding UTF8
+        }
+    }
+    
+    Add-Content -Path $OutputFile -Value "`n// END OF FILE: $relativePath`n" -Encoding UTF8
+}
+
+Write-Host "Succès ! Ton contexte Next.js est prêt dans : $OutputFile" -ForegroundColor Green
+
+// END OF FILE: extract_context.ps1
+
+
+// FILE: next-env.d.ts
+-----------------------------------------------
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+import "./.next/dev/types/routes.d.ts";
+
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+
+
+// END OF FILE: next-env.d.ts
+
+
+// FILE: next.config.ts
+-----------------------------------------------
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+};
+
+export default nextConfig;
+
+
+// END OF FILE: next.config.ts
+
+
+// FILE: package.json
+-----------------------------------------------
+{
+  "name": "hub",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "lucide-react": "^1.12.0",
+    "next": "16.2.4",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
+
+
+// END OF FILE: package.json
+
+
+// FILE: postcss.config.mjs
+-----------------------------------------------
+const config = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+
+export default config;
+
+
+// END OF FILE: postcss.config.mjs
+
+
+// FILE: README.md
+-----------------------------------------------
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+// END OF FILE: README.md
+
+
+// FILE: tsconfig.json
+-----------------------------------------------
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}
+
+
+// END OF FILE: tsconfig.json
+
