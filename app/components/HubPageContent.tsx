@@ -1,17 +1,14 @@
 // ============================================================
-// FICHIER  : dev_agt_assist/hub/app/components/HubPageContent.tsx
-// VERSION  : 3.2.0
-// Correction : SECTOR_ROUTES pointe vers les vraies URLs (ports séparés)
-// Ports :
-//   PME        → http://localhost:3001
-//   Bancaire   → http://localhost:3002
-//   Clinique   → http://localhost:3003
-//   École      → http://localhost:3004
-//   E-commerce → http://localhost:3005
-//   Hôtel      → http://localhost:3006
-//   Secteur Public → http://localhost:3007  (port attribué)
-//   Restaurant → http://localhost:3008
-//   Voyage     → http://localhost:3009
+// FICHIER  : app/components/HubPageContent.tsx
+// VERSION  : 3.1.0
+// Fix + Vidéo réelle : https://api.salma.agtgroupholding.com/media/seed/bourses/demo.mp4
+// Changements :
+//   - Vidéo embarquée depuis le serveur AGT
+//   - globals.css fix : @import en premier
+//   - Hero redesigné : fond sombre, grain, orbes, police Syne
+//   - Footer original restauré intégralement
+//   - Section Tarifs supprimée
+//   - Secteurs avec images illustratives Unsplash
 // ============================================================
 
 "use client";
@@ -33,7 +30,7 @@ function cn(...classes: (string | boolean | undefined | null)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-// ── Routes internes du Hub ────────────────────────────────────────────────────
+// ── Routes ────────────────────────────────────────────────────────────────────
 const ROUTES = {
   onboarding: "/onboarding",
   login:      "/login",
@@ -41,19 +38,16 @@ const ROUTES = {
   tutorial:   "/tutorial",
 };
 
-// ── Routes vers les applis secteurs (ports séparés) ───────────────────────────
-// Chaque secteur est une appli Next.js indépendante sur son propre port.
-// En production, remplacer par les vraies URLs de déploiement.
 const SECTOR_ROUTES: Record<string, string> = {
-  pme:        "http://localhost:3001",
-  bancaire:   "http://localhost:3002",
-  clinique:   "http://localhost:3003",
-  ecole:      "http://localhost:3004",
-  ecommerce:  "http://localhost:3005",
-  hotel:      "http://localhost:3006",
-  public:     "http://localhost:3007",
-  restaurant: "http://localhost:3008",
-  voyage:     "http://localhost:3009",
+  pme:        "https://pme.agt-bot.com",
+  bancaire:   "https://banking.agt-bot.com",
+  clinique:   "https://clinical.agt-bot.com",
+  ecole:      "https://school.agt-bot.com",
+  ecommerce:  "https://e-commerce.agt-bot.com",
+  hotel:      "https://hotel.agt-bot.com",
+  public:     "https://public.agt-bot.com",
+  restaurant: "https://restaurant.agt-bot.com",
+  voyage:     "https://travell.agt-bot.com",
 };
 
 // ── Type Secteur ─────────────────────────────────────────────────────────────
@@ -125,7 +119,7 @@ function HeroCarousel({ locale }: { locale: string }) {
         </div>
       ))}
 
-      {/* Grain texture */}
+      {/* Grain texture cinématique */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.16]"
         style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E\")", backgroundSize: "180px 180px" }} />
 
@@ -133,7 +127,7 @@ function HeroCarousel({ locale }: { locale: string }) {
       <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
         style={{ backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,1) 1px,transparent 1px)", backgroundSize: "60px 60px" }} />
 
-      {/* Orbes */}
+      {/* Orbe lumière dynamique */}
       <div className="absolute top-[-100px] right-[12%] w-[450px] h-[450px] rounded-full blur-3xl pointer-events-none transition-all duration-1000"
         style={{ background: `radial-gradient(circle, ${s.accent}28 0%, transparent 65%)` }} />
       <div className="absolute bottom-[-80px] left-[8%] w-[320px] h-[320px] rounded-full blur-3xl pointer-events-none opacity-35"
@@ -194,7 +188,7 @@ function HeroCarousel({ locale }: { locale: string }) {
         </div>
       </div>
 
-      {/* Flèches */}
+      {/* Flèches navigation */}
       <button onClick={prev} className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full flex items-center justify-center text-white transition-all hover:scale-110"
         style={{ background: "rgba(0,0,0,0.28)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.16)" }}>
         <ChevronLeft className="w-5 h-5" />
@@ -204,7 +198,7 @@ function HeroCarousel({ locale }: { locale: string }) {
         <ChevronRight className="w-5 h-5" />
       </button>
 
-      {/* Dots */}
+      {/* Indicateurs dots */}
       <div className="absolute bottom-28 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5">
         {HERO_SLIDES.map((_, i) => (
           <button key={i} onClick={() => goTo(i)} className="rounded-full transition-all duration-300"
@@ -221,20 +215,15 @@ function HeroCarousel({ locale }: { locale: string }) {
 }
 
 // ── Carte Secteur ─────────────────────────────────────────────────────────────
-// CORRECTION : utilise <a> au lieu de <Link> car les URLs sont externes (autres ports)
 function SectorCard({ sector, locale }: { sector: Sector; locale: string }) {
   const [hovered, setHovered] = useState(false);
   const Icon = sector.icon;
   return (
-    <a
-      href={SECTOR_ROUTES[sector.id]}
-      target="_blank"
-      rel="noopener noreferrer"
+    <Link href={SECTOR_ROUTES[sector.id]}
       className="group relative block rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2"
-      style={{ boxShadow: hovered ? `0 28px 64px ${sector.primary}42, 0 8px 24px rgba(0,0,0,0.22)` : "0 4px 20px rgba(0,0,0,0.16)", border: "1px solid rgba(255,255,255,0.10)", cursor: "pointer" }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+      style={{ boxShadow: hovered ? `0 28px 64px ${sector.primary}42, 0 8px 24px rgba(0,0,0,0.22)` : "0 4px 20px rgba(0,0,0,0.16)", border: "1px solid rgba(255,255,255,0.10)" }}
+      onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+
       {/* Image */}
       <div className="relative h-44 overflow-hidden">
         <img src={sector.image} alt={locale === "fr" ? sector.nameFr : sector.nameEn}
@@ -269,13 +258,11 @@ function SectorCard({ sector, locale }: { sector: Sector; locale: string }) {
           ))}
         </div>
         <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-          <span className="text-xs font-bold" style={{ color: sector.primary }}>
-            {locale === "fr" ? "Découvrir la solution" : "Discover the solution"}
-          </span>
+          <span className="text-xs font-bold" style={{ color: sector.primary }}>{locale === "fr" ? "Découvrir la solution" : "Discover the solution"}</span>
           <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" style={{ color: sector.primary }} />
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
 
@@ -341,8 +328,13 @@ export default function HubPageContent() {
 
   const handlePlayVideo = () => {
     if (!videoRef.current) return;
-    if (videoPlaying) { videoRef.current.pause(); setVideoPlaying(false); }
-    else { videoRef.current.play(); setVideoPlaying(true); }
+    if (videoPlaying) {
+      videoRef.current.pause();
+      setVideoPlaying(false);
+    } else {
+      videoRef.current.play();
+      setVideoPlaying(true);
+    }
   };
 
   return (
@@ -428,12 +420,9 @@ export default function HubPageContent() {
               ))}
             </div>
           </div>
-
-          {/* Grille des secteurs — chaque carte ouvre l'appli sur son port */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {SECTORS.map(sector => <SectorCard key={sector.id} sector={sector} locale={locale} />)}
           </div>
-
           <div className="text-center mt-16">
             <p className="text-white/50 text-sm mb-6">{locale === "fr" ? "Votre secteur n'est pas listé ? Contactez-nous pour une solution personnalisée." : "Your industry isn't listed? Contact us for a custom solution."}</p>
             <Link href={ROUTES.onboarding} className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#25D366] text-white font-black text-base hover:bg-[#128C7E] transition-all hover:scale-105 shadow-lg shadow-[#25D366]/20">
@@ -458,8 +447,11 @@ export default function HubPageContent() {
           </p>
         </div>
 
+        {/* ── Player vidéo stylé ── */}
         <div className="relative rounded-2xl overflow-hidden max-w-3xl mx-auto"
           style={{ background: "#010f0c", boxShadow: "0 40px 100px rgba(7,94,84,0.32), 0 8px 32px rgba(0,0,0,0.28)" }}>
+
+          {/* Barre titre façon macOS */}
           <div className="flex items-center gap-2 px-5 py-3.5 border-b" style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.07)" }}>
             <div className="flex gap-1.5">
               <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
@@ -473,32 +465,96 @@ export default function HubPageContent() {
               </div>
             </div>
           </div>
+
+          {/* Zone vidéo */}
           <div className="aspect-video relative bg-[#010f0c]">
-            <video ref={videoRef} className="w-full h-full object-cover" onEnded={() => setVideoPlaying(false)} preload="metadata" playsInline>
+
+            {/* ── Vraie vidéo depuis le serveur AGT ── */}
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover"
+              onEnded={() => setVideoPlaying(false)}
+              preload="metadata"
+              playsInline
+            >
               <source src={DEMO_VIDEO_URL} type="video/mp4" />
             </video>
+
+            {/* Overlay play/pause — affiché quand pas en lecture */}
             {!videoPlaying && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ background: "rgba(1,15,12,0.65)", backdropFilter: "blur(2px)" }}>
+              <div className="absolute inset-0 flex flex-col items-center justify-center"
+                style={{ background: "rgba(1,15,12,0.65)", backdropFilter: "blur(2px)" }}>
+
+                {/* Mockup chat WhatsApp en fond déco */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.07] pointer-events-none px-12">
+                  <div className="w-72 space-y-3">
+                    {[
+                      { msg: "Bonjour, j'ai besoin d'un RDV médical",      me: false },
+                      { msg: "Bien sûr ! Pour quelle spécialité ?",         me: true  },
+                      { msg: "Cardiologue, demain matin si possible",        me: false },
+                      { msg: "✅ RDV confirmé — Dr. Martin, Mardi 9h30",    me: true  },
+                      { msg: "Merci ! Je reçois une confirmation ?",         me: false },
+                      { msg: "Oui, envoyée sur WhatsApp 📱",                me: true  },
+                    ].map((item, i) => (
+                      <div key={i} className={`flex ${item.me ? "justify-end" : "justify-start"}`}>
+                        <div className={`px-3 py-2 rounded-2xl text-[11px] text-white max-w-[75%] leading-relaxed ${item.me ? "bg-[#25D366]/60 rounded-br-sm" : "bg-white/15 rounded-bl-sm"}`}>
+                          {item.msg}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bouton play central */}
                 <div className="relative flex flex-col items-center z-10">
-                  <div className="absolute rounded-full border border-[#25D366]/15 animate-ping" style={{ width: 130, height: 130, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
-                  <div className="absolute rounded-full border border-[#25D366]/22" style={{ width: 108, height: 108, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
-                  <button onClick={handlePlayVideo} className="relative w-20 h-20 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+                  {/* Anneaux animés */}
+                  <div className="absolute rounded-full border border-[#25D366]/15 animate-ping"
+                    style={{ width: 130, height: 130, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
+                  <div className="absolute rounded-full border border-[#25D366]/22"
+                    style={{ width: 108, height: 108, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
+                  <button
+                    onClick={handlePlayVideo}
+                    className="relative w-20 h-20 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
                     style={{ background: "linear-gradient(135deg, #25D366, #075E54)", boxShadow: "0 0 40px rgba(37,211,102,0.42), 0 8px 24px rgba(0,0,0,0.3)" }}>
                     <Play className="w-8 h-8 text-white ml-1" />
                   </button>
-                  <p className="mt-8 text-white/45 text-sm font-medium">{locale === "fr" ? "Regarder la démo" : "Watch the demo"}</p>
+                  <p className="mt-8 text-white/45 text-sm font-medium">
+                    {locale === "fr" ? "Regarder la démo" : "Watch the demo"}
+                  </p>
+                  <div className="flex items-center gap-3 mt-3">
+                    {[
+                      { e: "🕐", t: "30 sec" },
+                      { e: "⚡", t: locale === "fr" ? "Sans code" : "No code" },
+                      { e: "📱", t: "WhatsApp" },
+                    ].map((c, i) => (
+                      <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs text-white/45"
+                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                        {c.e} {c.t}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
+
+            {/* Bouton pause (quand vidéo en cours) */}
             {videoPlaying && (
-              <button onClick={handlePlayVideo} className="absolute bottom-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 opacity-70 hover:opacity-100"
+              <button
+                onClick={handlePlayVideo}
+                className="absolute bottom-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 opacity-70 hover:opacity-100"
                 style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)" }}>
                 <Pause className="w-4 h-4 text-white" />
               </button>
             )}
           </div>
+
+          {/* Métriques bas */}
           <div className="grid grid-cols-3 divide-x border-t" style={{ borderColor: "rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.03)" }}>
-            {[{ v: "30 sec", fr: "Durée", en: "Duration" },{ v: "< 5 min", fr: "Mise en service", en: "Setup time" },{ v: "0 code", fr: "Requis", en: "Required" }].map((m, i) => (
+            {[
+              { v: "30 sec",  fr: "Durée",           en: "Duration"   },
+              { v: "< 5 min", fr: "Mise en service", en: "Setup time" },
+              { v: "0 code",  fr: "Requis",          en: "Required"   },
+            ].map((m, i) => (
               <div key={i} className="flex flex-col items-center py-4 text-center" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
                 <span className="font-black text-[#25D366] text-base">{m.v}</span>
                 <span className="text-[10px] text-white/28 uppercase tracking-widest mt-0.5">{locale === "fr" ? m.fr : m.en}</span>
@@ -568,11 +624,13 @@ export default function HubPageContent() {
         </div>
       </section>
 
-      {/* ══ FOOTER ══════════════════════════════════════════════════════════ */}
+      {/* ══ FOOTER — VERSION ORIGINALE COMPLÈTE ═════════════════════════════ */}
       <footer className="bg-[#022c22] text-white">
         <div className="h-1 bg-gradient-to-r from-[#25D366] via-[#075E54] to-[#6C3CE1]" />
         <div className="max-w-6xl mx-auto px-4 pt-16 pb-10">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
+
+            {/* Brand */}
             <div className="md:col-span-4 space-y-5">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-[#25D366] flex items-center justify-center text-white font-black text-base shadow-lg">A</div>
@@ -591,14 +649,23 @@ export default function HubPageContent() {
                 </div>
                 <div className="flex items-center gap-2.5 text-sm text-white/50">
                   <Mail className="w-4 h-4 flex-shrink-0 text-[#25D366]" />
-                  <a href="mailto:secretariatagtechnologies@gmail.com" className="hover:text-[#25D366] transition-colors">secretariatagtechnologies@gmail.com</a>
+                  <a href="mailto:secretariatagtechnologies@gmail.com" className="hover:text-[#25D366] transition-colors">
+                    secretariatagtechnologies@gmail.com
+                  </a>
                 </div>
               </div>
             </div>
+
+            {/* Produit */}
             <div className="md:col-span-2 space-y-4">
               <p className="text-xs font-black uppercase tracking-widest text-white/40 mb-5">{locale === "fr" ? "Produit" : "Product"}</p>
               <ul className="space-y-3">
-                {[{ fr:"Fonctionnalités", en:"Features", href:"#features" },{ fr:"Demo", en:"Demo", href:"#demo" },{ fr:"S'inscrire", en:"Sign up", href:ROUTES.onboarding }].map(item => (
+                {[
+                  { fr:"Fonctionnalités", en:"Features",  href:"#features" },
+                  { fr:"Tarifs",         en:"Pricing",    href:"#plans" },
+                  { fr:"Demo",           en:"Demo",       href:"#demo" },
+                  { fr:"S'inscrire",     en:"Sign up",    href:ROUTES.onboarding },
+                ].map(item => (
                   <li key={item.href}>
                     <a href={item.href} className="text-sm text-white/60 hover:text-[#25D366] transition-colors flex items-center gap-1.5 group">
                       <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -608,23 +675,31 @@ export default function HubPageContent() {
                 ))}
               </ul>
             </div>
+
+            {/* Solutions */}
             <div className="md:col-span-3 space-y-4">
               <p className="text-xs font-black uppercase tracking-widest text-white/40 mb-5">Solutions</p>
               <ul className="space-y-2">
                 {SECTORS.slice(0, 5).map(s => (
                   <li key={s.id}>
-                    <a href={SECTOR_ROUTES[s.id]} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-white/60 hover:text-[#25D366] transition-colors group">
+                    <Link href={SECTOR_ROUTES[s.id]} className="flex items-center gap-2 text-sm text-white/60 hover:text-[#25D366] transition-colors group">
                       <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: s.accent }} />
                       {locale === "fr" ? s.nameFr : s.nameEn}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
+
+            {/* Ressources */}
             <div className="md:col-span-3 space-y-4">
               <p className="text-xs font-black uppercase tracking-widest text-white/40 mb-5">{locale === "fr" ? "Ressources" : "Resources"}</p>
               <ul className="space-y-3">
-                {[{ fr:"Aide", en:"Help", href:ROUTES.help, Icon:HelpCircle },{ fr:"Tutoriels", en:"Tutorials", href:ROUTES.tutorial, Icon:BookOpen },{ fr:"Se connecter", en:"Log in", href:ROUTES.login, Icon:Bot }].map(item => (
+                {[
+                  { fr:"Aide",         en:"Help",       href:ROUTES.help,     Icon:HelpCircle },
+                  { fr:"Tutoriels",    en:"Tutorials",  href:ROUTES.tutorial, Icon:BookOpen },
+                  { fr:"Se connecter",en:"Log in",      href:ROUTES.login,    Icon:Bot },
+                ].map(item => (
                   <li key={item.href}>
                     <Link href={item.href} className="flex items-center gap-2.5 text-sm text-white/60 hover:text-[#25D366] transition-colors group">
                       <item.Icon className="w-3.5 h-3.5 text-white/30 group-hover:text-[#25D366] transition-colors" />
@@ -638,13 +713,21 @@ export default function HubPageContent() {
                 <span>{locale === "fr" ? "Conçu au Cameroun" : "Made in Cameroon"}</span>
               </div>
             </div>
+
           </div>
+
           <div className="h-px bg-white/10 mb-6" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-white/30">© {new Date().getFullYear()} AG Technologies. {locale === "fr" ? "Tous droits réservés." : "All rights reserved."}</p>
+            <p className="text-xs text-white/30">
+              © {new Date().getFullYear()} AG Technologies. {locale === "fr" ? "Tous droits réservés." : "All rights reserved."}
+            </p>
             <div className="flex items-center gap-3">
-              <button onClick={() => setLocale(l => l === "fr" ? "en" : "fr")} className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-white/50 hover:text-white transition-all font-bold">{locale === "fr" ? "🇬🇧 EN" : "🇫🇷 FR"}</button>
-              <button onClick={() => setTheme(t => t === "dark" ? "light" : "dark")} className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white/50 hover:text-white transition-all">
+              <button onClick={() => setLocale(l => l === "fr" ? "en" : "fr")}
+                className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-white/50 hover:text-white transition-all font-bold">
+                {locale === "fr" ? "🇬🇧 EN" : "🇫🇷 FR"}
+              </button>
+              <button onClick={() => setTheme(t => t === "dark" ? "light" : "dark")}
+                className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white/50 hover:text-white transition-all">
                 {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
             </div>
