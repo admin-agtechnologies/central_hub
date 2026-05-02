@@ -82,9 +82,13 @@ const TESTIMONIALS = [
 
 // ── Hero slides ───────────────────────────────────────────────────────────────
 const HERO_SLIDES = [
-  { image:"/images/hero/hero-1.jpg", badgeFr:"10 000 FCFA offerts à l'inscription", badgeEn:"10,000 XAF offered at registration", line1Fr:"Votre assistant virtuel,",  line1En:"Your virtual assistant,",  line2Fr:"prêt en 5 minutes.",         line2En:"ready in 5 minutes.",        accent:"#25D366", badgeIcon:"zap",     overlayA:"#075E54C8", overlayB:"#022c22E8" },
-  { image:"/images/hero/hero-2.png", badgeFr:"WhatsApp · 24h/24 · 7j/7",           badgeEn:"WhatsApp · 24/7",                   line1Fr:"Répondez à vos clients",    line1En:"Answer your customers",    line2Fr:"même quand vous dormez.",    line2En:"even while you sleep.",      accent:"#25D366", badgeIcon:"message", overlayA:"#022c22E5", overlayB:"#075E54C5" },
-  { image:"/images/hero/hero-3.jpg", badgeFr:"Agent Vocal IA nouvelle génération",  badgeEn:"Next-gen AI Voice Agent",           line1Fr:"Un agent IA qui décroche",  line1En:"An AI agent that answers",  line2Fr:"à votre place.",             line2En:"in your place.",             accent:"#A78BFA", badgeIcon:"phone",   overlayA:"#2D1B69E0", overlayB:"#075E54B8" },
+  { image:"/images/hero/Bank1.jpg",     badgeFr:"10 000 FCFA offerts à l\'inscription", badgeEn:"10,000 XAF offered at registration", line1Fr:"Votre assistant virtuel,",  line1En:"Your virtual assistant,",   line2Fr:"prêt en 5 minutes.",          line2En:"ready in 5 minutes.",         accent:"#25D366", badgeIcon:"zap",     overlayA:"#075E54CC", overlayB:"#022c22EE" },
+  { image:"/images/hero/hero-2.png",    badgeFr:"WhatsApp · 24h/24 · 7j/7",            badgeEn:"WhatsApp · 24/7",                   line1Fr:"Répondez à vos clients",    line1En:"Answer your customers",     line2Fr:"même quand vous dormez.",     line2En:"even while you sleep.",       accent:"#25D366", badgeIcon:"message", overlayA:"#022c22E8", overlayB:"#075E54CC" },
+  { image:"/images/hero/hero-3.jpg",    badgeFr:"Agent Vocal IA nouvelle génération",   badgeEn:"Next-gen AI Voice Agent",           line1Fr:"Un agent IA qui décroche",  line1En:"An AI agent that answers",  line2Fr:"à votre place.",              line2En:"in your place.",              accent:"#A78BFA", badgeIcon:"phone",   overlayA:"#2D1B69E0", overlayB:"#075E54C0" },
+  { image:"/images/hero/E-com.avif",    badgeFr:"E-commerce & boutiques en ligne",      badgeEn:"E-commerce & online stores",        line1Fr:"Boostez vos ventes",        line1En:"Boost your sales",          line2Fr:"avec l\'IA 24h/24.",          line2En:"with AI 24/7.",               accent:"#C4B5FD", badgeIcon:"zap",     overlayA:"#4C1D95DD", overlayB:"#1E1040CC" },
+  { image:"/images/hero/clinique.avif", badgeFr:"Santé & Médical",                      badgeEn:"Health & Medical",                  line1Fr:"Votre clinique connectée,", line1En:"Your clinic connected,",    line2Fr:"patients servis 24h/24.",     line2En:"patients served 24/7.",       accent:"#38BDF8", badgeIcon:"phone",   overlayA:"#0C4A6EDD", overlayB:"#0284C7BB" },
+  { image:"/images/hero/Ecole.jpg",     badgeFr:"Éducation & Formation",                badgeEn:"Education & Training",              line1Fr:"L\'école du futur,",        line1En:"The school of the future,", line2Fr:"connectée à chaque famille.", line2En:"connected to every family.",  accent:"#A5B4FC", badgeIcon:"message", overlayA:"#312E81E0", overlayB:"#4338CACC" },
+  { image:"/images/hero/resto.jpg",     badgeFr:"Restauration & Hôtellerie",            badgeEn:"Food & Hospitality",                line1Fr:"Votre restaurant digital,",  line1En:"Your digital restaurant,",  line2Fr:"commandes & réservations IA.",line2En:"AI orders & reservations.",   accent:"#FDBA74", badgeIcon:"message", overlayA:"#9A3412E0", overlayB:"#EA580CCC" },
 ];
 
 // ── HeroCarousel ──────────────────────────────────────────────────────────────
@@ -247,19 +251,21 @@ function SectorCard({ sector, locale }: { sector: Sector; locale: string }) {
       </div>
 
       {/* Corps */}
-      <div className="p-5 bg-white">
-        <p className="text-sm leading-relaxed mb-4 text-slate-500">{locale === "fr" ? sector.descFr : sector.descEn}</p>
+      <div className="p-5 bg-[var(--bg-card)]">
+        <p className="text-sm leading-relaxed mb-4 text-[var(--text-muted)]">{locale === "fr" ? sector.descFr : sector.descEn}</p>
         <div className="grid grid-cols-2 gap-2 mb-5">
           {(locale === "fr" ? sector.featuresFr : sector.featuresEn).map((f, i) => (
-            <div key={i} className="flex items-center gap-1.5 text-xs text-slate-500">
+            <div key={i} className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
               <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: sector.accent }} />
               {f}
             </div>
           ))}
         </div>
-        <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-          <span className="text-xs font-bold" style={{ color: sector.primary }}>{locale === "fr" ? "Découvrir la solution" : "Discover the solution"}</span>
-          <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" style={{ color: sector.primary }} />
+        <div className="flex items-center justify-between pt-4 border-t border-[var(--border)]">
+          <span className="text-xs font-bold tracking-wide" style={{ color: sector.primary }}>{locale === "fr" ? "Découvrir la solution" : "Discover the solution"}</span>
+          <div className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 group-hover:translate-x-1" style={{ backgroundColor: `${sector.primary}18` }}>
+            <ArrowRight className="w-3.5 h-3.5" style={{ color: sector.primary }} />
+          </div>
         </div>
       </div>
     </Link>
@@ -344,7 +350,7 @@ export default function HubPageContent() {
       <nav className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--bg-card)]/85 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5 flex-shrink-0">
-            <div className="w-8 h-8 rounded-xl bg-[#075E54] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#075E54]/30">A</div>
+            <img src="/logo.png" alt="AGT Platform" className="h-9 w-auto object-contain" />
             <div className="flex flex-col leading-none">
               <span className="font-black text-[var(--text)] text-sm tracking-tight" style={{ fontFamily: "'Syne',system-ui" }}>AGT Platform</span>
               <span className="text-[10px] text-[var(--text-muted)] font-medium hidden sm:block">by AG Technologies</span>
@@ -633,7 +639,7 @@ export default function HubPageContent() {
             {/* Brand */}
             <div className="md:col-span-4 space-y-5">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-[#25D366] flex items-center justify-center text-white font-black text-base shadow-lg">A</div>
+                <img src="/logo.png" alt="AGT Platform" className="h-10 w-auto object-contain brightness-0 invert" />
                 <div className="flex flex-col leading-none">
                   <span className="font-black text-lg text-white tracking-tight" style={{ fontFamily: "'Syne',system-ui" }}>AGT Platform</span>
                   <span className="text-[11px] text-white/50 font-medium">by AG Technologies</span>

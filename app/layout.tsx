@@ -17,8 +17,22 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "AGT Platform",
-  description: "Agent Vocal IA nouvelle génération",
+  title: "AGT Platform — Assistant IA pour entreprises africaines",
+  description: "AGT Platform donne à chaque entreprise un assistant intelligent disponible 24h/24. WhatsApp, agent vocal IA, gestion RDV.",
+  keywords: ["assistant IA", "WhatsApp bot", "agent vocal IA", "AGT Platform", "Cameroun", "Afrique"],
+  openGraph: {
+    title: "AGT Platform — Assistant IA nouvelle génération",
+    description: "Automatisez votre service client avec un assistant IA disponible 24h/24.",
+    siteName: "AGT Platform",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/logo.png",          sizes: "any" },
+    ],
+    apple: "/apple-touch-icon.png",
+    shortcut: "/logo.png",
+  },
 };
 
 export default function RootLayout({
